@@ -3,6 +3,7 @@ import 'package:paytonkawa/views/homepage.dart';
 import 'package:paytonkawa/views/register.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:paytonkawa/views/qrScan.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -95,7 +96,7 @@ class LoginPage extends StatelessWidget {
                                         Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                               const  HomePage(),
+                                                QrScan(), // const  HomePage(),
                                           ),
                                         );
 
@@ -157,11 +158,45 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
+
+
+                //page de scan
+                Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Scaner un qrcode",
+                    style: TextStyle(
+                      color: black,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => QrScan(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Scan',
+                      style: TextStyle(
+                        color: blue,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+
+
+
+            //page d' inscription
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    "Don't have an account? ",
+                    "Vous n'avez de compte? ",
                     style: TextStyle(
                       color: black,
                     ),
@@ -182,7 +217,10 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
+              ), 
+
+
+
             ],
           ),
         ),
