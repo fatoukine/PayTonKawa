@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "508218236653",
+    "project_id": "paytonkawa",
+    "storage_bucket": "paytonkawa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508218236653:android:34a32fa535ca6866c176e4",
+        "android_client_info": {
+          "package_name": "com.example.paytonkawa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "508218236653-ondj4lkihr12ki1s9f71vnipkos53055.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXHeeJD26bVuAqkP6kx88g2ZjlHZ7SVlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "508218236653-ondj4lkihr12ki1s9f71vnipkos53055.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
