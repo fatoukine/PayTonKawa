@@ -1,17 +1,83 @@
+import 'package:http/http.dart';
+import 'dart:io';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:paytonkawa/constants.dart';
 import 'package:paytonkawa/views/homepage.dart';
 import 'package:paytonkawa/views/register.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:paytonkawa/views/qrScan.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
+   
+
+
+  Future sendEmail({
+    required String receiver_email,
+    required String email,
+    required String subject,
+    required String message,
+  }) async {
+    final serviceId = 'service_gz415yv';
+    final templateId = 'template_836wk43';
+    final userId = '-qhYTuja4s3dTXI0n';
+
+    final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
+    final response = await http.post(
+      url,
+      headers: {
+        'origin': 'http://localhost',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'service_id': serviceId,
+        'template_id': templateId,
+        'user_id': userId,
+        'template_params': {
+          'receiver_email': receiver_email,
+          'user_email': email,
+          'user_subject': subject,
+          'user_message': message,
+        },
+      }),
+    );
+
+    print(response.body);
+  }
+
+/*  _shareQrCode() async {
+    final directory = (await getApplicationDocumentsDirectory()).path;
+    String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+    final imageFile = await File('pic/$fileName.png').create();
+    screenshotController
+        .capture()
+        .then((Uint8List image) async {
+          if (image != null) {
+            try {
+              if (imageFile != null) {
+                await imageFile.writeAsBytes(image);
+                // Share.shareFiles([imageFile.path]);
+              }
+            } catch (error) {}
+          }
+        } as FutureOr Function(Uint8List? value))
+        .catchError((onError) {
+      print('Error --->> $onError');
+    });
+  }
+*/
   @override
   Widget build(BuildContext context) {
     TextEditingController email = TextEditingController();
     TextEditingController password = TextEditingController();
+
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -38,7 +104,7 @@ class LoginPage extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.all(12.0),
                       child: Text(
-                        'Login to your Account',
+                        'Connexion PayTonKawa Mobile',
                         style: TextStyle(
                           fontSize: 19,
                           fontWeight: FontWeight.w500,
@@ -74,17 +140,31 @@ class LoginPage extends StatelessWidget {
                                   onPressed: () async {
                                     if (email.text.isNotEmpty) {
                                       if (password.text.isNotEmpty) {
+                                        sendEmail(
+                                          receiver_email: email.text,
+                                          email: email.text,
+                                          subject:
+                                              'Authenfification PayTonKawa',
+                                          message: '' /*'Dans le cadre de sa campagne de réforme et mise en place d\'
+  environnement sécurisé, la socièté PayTonkawa procède à un nouveau mode 
+  d\'authentification au niveau de ses applications mobiles notemment au niveau de 
+  PayTonKawa Mobile.
+  De ce fait pour terminer votre authentification sur l\'application PayTonKawa
+  Mobile, vous devez necessairement scanner le Qrcode rattaché à ce mail depuis 
+  l\'application mobile.' */,
+                                        );
+                                        //_shareQrCode();
                                         setState(() {
                                           loading = !loading;
                                         });
                                       } else {
                                         newSnackBar(context,
                                             title:
-                                                'Email and Password Required!');
+                                                'Email et Password Requises!');
                                       }
                                     } else {
                                       newSnackBar(context,
-                                          title: 'Email Required!');
+                                          title: 'Email Requise!');
                                     }
 
                                     try {
@@ -93,10 +173,16 @@ class LoginPage extends StatelessWidget {
                                               email: email.text,
                                               password: password.text)
                                           .then((value) {
+
+                                        newSnackBar(context,
+                                            title:
+                                                'Un email de qrcode vous a été envoyé. Veuillez vérifier vos e-mail et scanner le qrcode !');    
+
+
                                         Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const  HomePage(), // QrScan(),const  HomePage(),
+                                                const HomePage(), // QrScan(),const  HomePage(),
                                           ),
                                         );
 
@@ -108,14 +194,14 @@ class LoginPage extends StatelessWidget {
                                       if (e.code == 'user-not-found') {
                                         newSnackBar(context,
                                             title:
-                                                'No user found for that email.');
+                                                'Aucun utilisateur n\'existe avec ce compte email');
                                         setState(() {
                                           loading = !loading;
                                         });
                                       } else if (e.code == 'wrong-password') {
                                         newSnackBar(context,
                                             title:
-                                                'Wrong password provided for that user.');
+                                                'Mot de passe erroné! Veuillez réessayer !');
                                         setState(() {
                                           loading = !loading;
                                         });
@@ -133,7 +219,7 @@ class LoginPage extends StatelessWidget {
                                         padding:
                                             EdgeInsets.fromLTRB(0, 15, 0, 15),
                                         child: Text(
-                                          'Sign In',
+                                          'Connexion',
                                           style: TextStyle(color: white),
                                         ),
                                       ),
@@ -159,9 +245,8 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
 
-
-                //page de scan
-                Row(
+              //page de scan
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
@@ -174,7 +259,7 @@ class LoginPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => QrScan(),
+                          builder: (context) => QRScanPage(),
                         ),
                       );
                     },
@@ -188,15 +273,12 @@ class LoginPage extends StatelessWidget {
                 ],
               ),
 
-
-
-
-            //page d' inscription
+              //page d' inscription
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    "Vous n'avez de compte? ",
+                    "Vous n'avez de compte ? ",
                     style: TextStyle(
                       color: black,
                     ),
@@ -210,17 +292,14 @@ class LoginPage extends StatelessWidget {
                       );
                     },
                     child: const Text(
-                      'Sign Up',
+                      'Inscription',
                       style: TextStyle(
                         color: blue,
                       ),
                     ),
                   ),
                 ],
-              ), 
-
-
-
+              ),
             ],
           ),
         ),
