@@ -19,7 +19,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.4 <3.0.0'
+  sdk: '>=2.19.2 <3.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -45,9 +45,13 @@ dependencies:
   dio: ^4.0.6
   arcore_flutter_plugin: ^0.1.0
   vector_math: ^2.1.4
-  qr_code_scanner: ^1.0.1
+  #qr_code_scanner: ^1.0.1
   ar_flutter_plugin: ^0.7.3
   permission_handler: ^10.2.0
+  flutter_barcode_scanner: ^2.0.0
+  camera: ^0.10.3+2
+  fluttertoast: ^8.2.1
+  babylonjs_viewer: ^1.2.1
 
 
   
