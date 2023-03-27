@@ -1,72 +1,59 @@
- pipeline {
-        
-        agent any
-        
-        triggers {
-            pollSCM 'H/5 * * * *' 
-        }
-        
-        stages{
-            stage("PayTonkawa checkout"){
-                steps {
-                    git branch: 'main', url: 'https://github.com/fatoukine/PayTonKawa.git'
-                }
-            }
-        
-     
-        
-          
-            stage("PayTonkawa Clean"){
-                steps {
-                    dir ('PROJECT/'){
-                        bat './mvnw clean'
-                          
-                    }
-                }
-            }
-          
-          
-              stage("PayTonkawa Compile"){
-                steps {
-                    dir ('PROJECT/'){
-                         bat './mvnw compile'
-                          
-                    }
-                }
-            }
-          
-          
-            stage("PayTonkawa Test"){
-                steps {
-                    dir ('PROJECT/'){
-                          bat './mvnw test'
-                          
-                    }
-                }
-            }
-          
-          
-           stage("PayTonkawa Package"){
-                steps {
-                    dir ('PROJECT/'){
-                         bat './mvnw package'
-                          
-                    }
-                }
-            }
-          
-          
-           /*  stage("PayTonkawa Archive"){
-                steps {
-                    dir ('PROJECT/'){
-                        bat 'rename target\\erphrense-0.0.1-SNAPSHOT.jar erphrense-%BUILD_NUMBER%.jar'
-                        archiveArtifacts artifacts: 'target\\erphrense-*.jar', followSymlinks: false
-                          
-                    }
-                }
-            }*/
-          
-          
-        }  
-        
+pipeline {
+    agent any
+ 
+    environment {
+        PATH = "C:/Users/adama/Desktop/MSPR_ERP/flutter/bin"
     }
+
+    stages{
+        stage('Paytonkawa checkout') { 
+            steps {
+                git branch:'develop',url:'https://github.com/fatoukine/PayTonKawa.git'
+                }
+
+        }
+
+        stage('Paytonkawa clean') {
+                steps {
+                   dir ('PROJECT/'){
+                    bat 'flutter clean'
+                  }
+                } 
+         }
+
+        stage('Paytonkawa dependencies') {
+            steps {
+               dir ('PROJECT/'){
+                bat 'flutter pub get'
+            }
+          }  
+        }
+
+        stage('Paytonkawa test') {
+            steps {
+                dir('PROJECT/lib/'){
+                       bat 'flutter test'
+                    }
+            }
+        }
+
+        stage('Paytonkawa package') {
+              steps {
+                  dir ('PROJECT/'){
+                   bat 'flutter build apk --release'
+                }
+              }  
+        }
+
+        stage('Paytonkawa archive') {
+            steps {
+               dir ('PROJECT/'){
+                bat 'mv build/app/outputs/flutter-apk/app-release.apk apk-payetonkawa-$BUILD_NUMBER.apk'
+                archiveArtifacts artifacts: 'apk-payetonkawa-*.apk', followSymlinks: false
+
+             }
+          } 
+        }  
+
+    }
+  }
